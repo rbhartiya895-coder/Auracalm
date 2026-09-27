@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Newsreader', Georgia, serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+.font-serif-quote {
+  font-family: var(--font-serif);
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.4;
+  }
+}
+
+@keyframes ripple-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes float-petal {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(0.95);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.7;
+  }
+  50% {
+    transform: translate(25px, -60px) rotate(45deg) scale(1.05);
+    opacity: 0.85;
+  }
+  85% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(50px, -130px) rotate(90deg) scale(0.95);
+    opacity: 0;
+  }
+}
+
+@keyframes aurora-glow {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(1) translate(0, 0);
+  }
+  33% {
+    opacity: 0.75;
+    transform: scale(1.12) translate(15px, -20px);
+  }
+  66% {
+    opacity: 0.55;
+    transform: scale(0.95) translate(-10px, 15px);
+  }
+}
+
+@keyframes sway-subtle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes shimmer-gentle {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-ripple-1 {
+  animation: ripple-ring 5s ease-in-out infinite;
+}
+
+.animate-ripple-2 {
+  animation: ripple-ring 5s ease-in-out infinite 1.2s;
+}
+
+.animate-ripple-3 {
+  animation: ripple-ring 5s ease-in-out infinite 2.4s;
+}
+
+.animate-float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.animate-aurora-1 {
+  animation: aurora-glow 14s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-glow 18s ease-in-out infinite 4s;
+}
+
+.animate-aurora-3 {
+  animation: aurora-glow 22s ease-in-out infinite 8s;
+}
+
+.animate-sway {
+  animation: sway-subtle 8s ease-in-out infinite;
+}
+
+.animate-petal-1 {
+  animation: float-petal 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.animate-petal-2 {
+  animation: float-petal 16s cubic-bezier(0.4, 0, 0.2, 1) infinite 3s;
+}
+
+.animate-petal-3 {
+  animation: float-petal 14s cubic-bezier(0.4, 0, 0.2, 1) infinite 6s;
+}
+
+.animate-petal-4 {
+  animation: float-petal 18s cubic-bezier(0.4, 0, 0.2, 1) infinite 9s;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.35);
+}

@@ -1,0 +1,6 @@
+{
+  "name": "AuraCalm - Guided Meditation & Audio Sanctuary",
+  "description": "Clinical-grade meditation app featuring guided audio sessions, interactive breathing pacers, somatic grounding tools, and daily progress tracking.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
