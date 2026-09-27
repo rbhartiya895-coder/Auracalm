@@ -1,4 +1,4 @@
-export type Language = 'en' | 'es' | 'fr' | 'de' | 'ja' | 'hi';
+export type Language = 'en' | 'hi' | 'es' | 'fr' | 'de' | 'ja' | 'mr' | 'bn' | 'ta' | 'te';
 
 export type AppTheme = 'light' | 'dark' | 'sanctuary';
 

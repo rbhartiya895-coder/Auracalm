@@ -1,8 +1,9 @@
 import React from 'react';
-import { ShieldCheck, PhoneCall, Globe, Sun, Moon, Settings, Sparkles, Activity, BookOpen, HeartPulse, Volume2, VolumeX, HelpCircle, Palette, Edit3 } from 'lucide-react';
+import { ShieldCheck, PhoneCall, Globe, Sun, Moon, Settings, Sparkles, Activity, BookOpen, HeartPulse, Volume2, VolumeX, HelpCircle, Palette, Edit3, Download } from 'lucide-react';
 import { TabView, Language, AppTheme } from '../types';
 import { BackgroundTheme } from './SanctuaryAtmosphere';
 import { getCountryCrisisData } from '../data/crisisHotlines';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface HeaderProps {
   currentTab: TabView;
@@ -26,6 +27,7 @@ interface HeaderProps {
   companionVoice?: string;
   userCountry?: string;
   onOpenCountrySelect?: () => void;
+  onOpenInstall?: () => void;
 }
 
 const VOICE_LABELS: Record<string, string> = {
@@ -65,8 +67,10 @@ export const Header: React.FC<HeaderProps> = ({
   companionName = 'Meera',
   companionVoice = 'kavya',
   userCountry = 'in',
-  onOpenCountrySelect
+  onOpenCountrySelect,
+  onOpenInstall
 }) => {
+  const { t, currentLanguage, openLanguageSelector } = useLanguage();
   const voiceLabel = VOICE_LABELS[companionVoice] || 'Kavya';
   const countryCrisis = getCountryCrisisData(userCountry);
 
@@ -91,10 +95,10 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold tracking-tight text-[#1c2e27] font-sans">AuraCalm</span>
               <span className="text-[10px] font-bold tracking-widest text-[#2d5648] bg-[#ebf4ef] border border-[#cde0d5] px-2 py-0.5 rounded-md uppercase">
-                CLINICAL
+                {t('clinicalBadge', 'CLINICAL')}
               </span>
             </div>
-            <p className="text-xs text-[#5f746b] font-medium">Crisis Audio Sanctuary</p>
+            <p className="text-xs text-[#5f746b] font-medium">{t('crisisSanctuary', 'Crisis Audio Sanctuary')}</p>
           </div>
         </div>
 
@@ -104,13 +108,25 @@ export const Header: React.FC<HeaderProps> = ({
             <ShieldCheck className="w-3.5 h-3.5 text-[#275344]" />
           </div>
           <div>
-            <span className="font-semibold text-[#1e4235] block leading-tight">Private & Anonymous</span>
-            <span className="text-[11px] text-[#4d7062] leading-tight">100% on-device • Zero tracking</span>
+            <span className="font-semibold text-[#1e4235] block leading-tight">{t('privateAnonymous', 'Private & Anonymous')}</span>
+            <span className="text-[11px] text-[#4d7062] leading-tight">{t('zeroTracking', '100% on-device • Zero tracking')}</span>
           </div>
         </div>
 
         {/* Right utility items */}
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Language Selector Pill */}
+          <button
+            onClick={openLanguageSelector}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold rounded-full bg-[#f2f7f4] hover:bg-[#e4ede7] text-[#20493b] border border-[#d2e2d8] shadow-2xs transition-all cursor-pointer group"
+            title={`Language: ${currentLanguage.nativeName} (${currentLanguage.name}). Click to change.`}
+          >
+            <Globe className="w-3.5 h-3.5 text-[#376b5a]" />
+            <span className="text-sm">{currentLanguage.flag}</span>
+            <span className="font-bold">{currentLanguage.nativeName}</span>
+            <span className="text-[10px] text-[#527768]">▾</span>
+          </button>
+
           {/* Companion Profile & Voice Model Customizer Pill */}
           <button
             onClick={onOpenNamingModal}
@@ -132,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
             title="Open Interactive Sanctuary Guide"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#3e725f]" />
-            <span className="hidden sm:inline">Guide</span>
+            <span className="hidden sm:inline">{t('guideBtn', 'Guide')}</span>
           </button>
 
           {/* Ambient Soundscapes Selector Pill */}
@@ -150,7 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
             ) : (
               <VolumeX className="w-3.5 h-3.5 text-slate-400" />
             )}
-            <span className="capitalize">{ambientSound ? ambientSound.replace('_', ' ') : 'Soundscapes'}</span>
+            <span className="capitalize">{ambientSound ? ambientSound.replace('_', ' ') : t('soundscapes', 'Soundscapes')}</span>
             <span className="text-[10px] text-[#789689]">▾</span>
           </button>
 
@@ -161,7 +177,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Change Sanctuary Background Atmosphere"
             >
               <Palette className="w-3.5 h-3.5 text-[#5e7c6e]" />
-              <span className="text-[11px] hidden md:inline">Atmosphere</span>
+              <span className="text-[11px] hidden md:inline">{t('atmosphere', 'Atmosphere')}</span>
               <span className="text-[10px] text-[#7d978c]">▾</span>
             </button>
             <div className="absolute right-0 mt-1 w-44 bg-white border border-[#d6e0da] rounded-xl shadow-xl py-1 hidden group-hover:block z-50 animate-in fade-in duration-150">
@@ -185,6 +201,19 @@ export const Header: React.FC<HeaderProps> = ({
               ))}
             </div>
           </div>
+
+          {/* Install / Download App Button */}
+          {onOpenInstall && (
+            <button
+              onClick={onOpenInstall}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full bg-emerald-700 hover:bg-emerald-800 active:scale-98 text-white shadow-2xs transition-all cursor-pointer"
+              title="Download or Install AuraCalm app on phone or desktop"
+            >
+              <Download className="w-3.5 h-3.5 text-emerald-200" />
+              <span className="hidden sm:inline font-bold">{t('installApp', 'Install App')}</span>
+              <span className="sm:hidden font-bold">App</span>
+            </button>
+          )}
 
           {/* Settings icon */}
           <button
@@ -235,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Sparkles className="w-4 h-4 text-[#376b5a]" />
-            <span>Sanctuary</span>
+            <span>{t('tabSanctuary', 'Sanctuary')}</span>
           </button>
 
           <button
@@ -247,7 +276,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <BookOpen className="w-4 h-4 text-[#3d6e67]" />
-            <span>Guided Sessions</span>
+            <span>{t('tabSessions', 'Guided Sessions')}</span>
             <span className="text-[10px] px-1.5 py-0.2 bg-[#d7ece5] text-[#225044] rounded-full font-bold">6</span>
           </button>
 
@@ -260,7 +289,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <Activity className="w-4 h-4 text-[#3f6575]" />
-            <span>Progress & Tracking</span>
+            <span>{t('tabProgress', 'Progress & Tracking')}</span>
             {streakDays > 0 && (
               <span className="text-[10px] px-1.5 py-0.2 bg-[#f4ebdc] text-[#73572d] rounded-full font-bold flex items-center gap-0.5">
                 🔥 {streakDays}d
@@ -277,7 +306,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             <HeartPulse className="w-4 h-4 text-[#8a5554]" />
-            <span>Somatic Calming Tools</span>
+            <span>{t('tabTools', 'Somatic Calming Tools')}</span>
           </button>
         </div>
 
@@ -287,12 +316,12 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-1 text-[11px] text-[#3e6a59] hover:underline cursor-pointer"
           >
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>Feature Guide</span>
+            <span>{t('featureGuide', 'Feature Guide')}</span>
           </button>
           <span>•</span>
           <div className="flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-[#3d7a64] animate-ping" />
-            <span>Sanctuary Live</span>
+            <span>{t('sanctuaryLive', 'Sanctuary Live')}</span>
           </div>
         </div>
       </div>

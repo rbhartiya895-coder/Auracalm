@@ -3,6 +3,7 @@ import { Play, Pause, RotateCcw, Volume2, VolumeX, Sparkles, Check, Clock, Shiel
 import { GuidedSession } from '../types';
 import { GUIDED_SESSIONS } from '../data/sessionsData';
 import { soundService } from '../services/soundService';
+import { useLanguage } from '../i18n/LanguageContext';
 import confetti from 'canvas-confetti';
 
 interface GuidedSessionsViewProps {
@@ -14,6 +15,7 @@ export const GuidedSessionsView: React.FC<GuidedSessionsViewProps> = ({
   onSessionCompleted,
   completedSessionIds
 }) => {
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activeSession, setActiveSession] = useState<GuidedSession | null>(null);
 
@@ -27,11 +29,11 @@ export const GuidedSessionsView: React.FC<GuidedSessionsViewProps> = ({
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const categories = [
-    { id: 'all', label: 'All Sessions' },
-    { id: 'anxiety', label: 'Anxiety & Panic Relief' },
-    { id: 'somatic', label: 'Vagus & Somatic Reset' },
-    { id: 'sleep', label: 'Deep Sleep & Night' },
-    { id: 'morning', label: 'Morning Grounding' }
+    { id: 'all', label: t('allSessions', 'All Sessions') },
+    { id: 'anxiety', label: t('catAnxiety', 'Anxiety & Panic Relief') },
+    { id: 'somatic', label: t('catSomatic', 'Vagus & Somatic Reset') },
+    { id: 'sleep', label: t('catSleep', 'Deep Sleep & Night') },
+    { id: 'morning', label: t('catMorning', 'Morning Grounding') }
   ];
 
   const filteredSessions = activeCategory === 'all'

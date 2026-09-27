@@ -210,6 +210,39 @@ export const storageService = {
     localStorage.removeItem('auracalm_bg_theme_v1');
     localStorage.removeItem('auracalm_user_country_v1');
     localStorage.removeItem('auracalm_has_selected_country_v1');
+    localStorage.removeItem('auracalm_app_language_v1');
+  },
+
+  getLanguage(): string {
+    try {
+      const lang = localStorage.getItem('auracalm_app_language_v1');
+      if (lang && lang.trim()) return lang.trim();
+
+      // Auto-detect browser preferred language
+      if (typeof navigator !== 'undefined' && navigator.language) {
+        const browser = navigator.language.toLowerCase();
+        if (browser.startsWith('hi')) return 'hi';
+        if (browser.startsWith('mr')) return 'mr';
+        if (browser.startsWith('bn')) return 'bn';
+        if (browser.startsWith('ta')) return 'ta';
+        if (browser.startsWith('te')) return 'te';
+        if (browser.startsWith('es')) return 'es';
+        if (browser.startsWith('fr')) return 'fr';
+        if (browser.startsWith('de')) return 'de';
+        if (browser.startsWith('ja')) return 'ja';
+      }
+    } catch {
+      // fallback
+    }
+    return 'en';
+  },
+
+  setLanguage(lang: string): void {
+    try {
+      localStorage.setItem('auracalm_app_language_v1', lang.trim().toLowerCase());
+    } catch {
+      // ignore
+    }
   },
 
   getUserCountry(): string {

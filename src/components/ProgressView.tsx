@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, Flame, Clock, CheckCircle2, Wind, Heart, Award, Calendar, Sparkles, TrendingUp, Plus } from 'lucide-react';
 import { UserProgress } from '../types';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface ProgressViewProps {
   progress: UserProgress;
@@ -13,6 +14,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
   onOpenMoodLog,
   onOpenGuidedSessions
 }) => {
+  const { t } = useLanguage();
   // Calculate average mood
   const avgMood = progress.moodHistory.length > 0
     ? (
@@ -33,13 +35,13 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
             <span className="text-xs font-bold uppercase tracking-widest text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-md">
               Evidence & Continuity
             </span>
-            <span className="text-xs text-slate-500">• Private On-Device Data</span>
+            <span className="text-xs text-slate-500">• {t('privateAnonymous', 'Private On-Device Data')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">
-            Progress & Nervous System Tracking
+            {t('progressHeader', 'Progress & Nervous System Tracking')}
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Review your mindful streaks, total audio immersion time, breathwork cycles, and emotional equilibrium.
+            {t('progressSubtitle', 'Review your mindful streaks, total audio immersion time, breathwork cycles, and emotional equilibrium.')}
           </p>
         </div>
 
@@ -48,7 +50,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
           className="inline-flex items-center gap-2 bg-[#0d6954] hover:bg-[#0a5242] text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          <span>Log New Mood & Sensations</span>
+          <span>{t('logMoodBtn', 'Log New Mood & Sensations')}</span>
         </button>
       </div>
 
@@ -61,14 +63,14 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-2xl font-extrabold text-slate-900">
-                {progress.currentStreakDays} Day Streak!
+                {progress.currentStreakDays} {t('streakTitle', 'Day Streak!')}
               </h2>
               <span className="bg-amber-100 text-amber-900 text-xs font-bold px-2 py-0.5 rounded-full border border-amber-300">
-                Active
+                {t('activeBadge', 'Active')}
               </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Your autonomic nervous system builds neural resilience with daily repeated micro-anchors.
+              {t('streakDescription', 'Your autonomic nervous system builds neural resilience with daily repeated micro-anchors.')}
             </p>
           </div>
         </div>
@@ -99,7 +101,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
         {/* Card 1: Total Minutes */}
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Mindful Time</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('statTotalMinutes', 'Mindful Time')}</span>
             <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
@@ -115,7 +117,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
         {/* Card 2: Completed Sessions */}
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Sessions</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('statSessionsDone', 'Sessions')}</span>
             <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
@@ -131,7 +133,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
         {/* Card 3: Breathwork Cycles */}
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Breath Cycles</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500">{t('statBreathCycles', 'Breath Cycles')}</span>
             <div className="w-8 h-8 rounded-xl bg-cyan-50 text-cyan-700 flex items-center justify-center">
               <Wind className="w-4 h-4" />
             </div>

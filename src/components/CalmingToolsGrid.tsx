@@ -1,5 +1,6 @@
 import React from 'react';
 import { FileText, Eye, ChevronRight, Activity, Waves } from 'lucide-react';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface CalmingToolsGridProps {
   onOpenMoodLog: () => void;
@@ -14,14 +15,16 @@ export const CalmingToolsGrid: React.FC<CalmingToolsGridProps> = ({
   onOpenButterfly,
   onOpenVagalHum
 }) => {
+  const { t } = useLanguage();
+
   return (
     <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 my-6">
       <div className="mb-4">
         <h2 className="text-xl sm:text-2xl font-bold text-[#1a2d25] font-sans tracking-tight">
-          Calming Tools
+          {t('calmingToolsTitle', 'Calming Tools')}
         </h2>
         <p className="text-xs sm:text-sm text-[#556f62] font-normal">
-          Try these anytime to feel more grounded.
+          {t('calmingToolsSubtitle', 'Try these anytime to feel more grounded.')}
         </p>
       </div>
 
@@ -38,10 +41,10 @@ export const CalmingToolsGrid: React.FC<CalmingToolsGridProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-xs sm:text-sm font-bold text-[#1b2f27] group-hover:text-[#11241d] transition-colors truncate">
-                Daily Mood Log
+                {t('toolMoodTitle', 'Daily Mood Log')}
               </h3>
               <p className="text-[11px] sm:text-xs text-[#597568] truncate">
-                Track your feelings
+                {t('toolMoodDesc', 'Track your feelings')}
               </p>
             </div>
           </div>
@@ -59,10 +62,10 @@ export const CalmingToolsGrid: React.FC<CalmingToolsGridProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-xs sm:text-sm font-bold text-[#1a2f36] group-hover:text-[#0e1f24] transition-colors truncate">
-                5-4-3-2-1 Anchoring
+                {t('tool54321Title', '5-4-3-2-1 Anchoring')}
               </h3>
               <p className="text-[11px] sm:text-xs text-[#52737c] truncate">
-                Ground yourself now
+                {t('tool54321Desc', 'Ground yourself now')}
               </p>
             </div>
           </div>
@@ -87,10 +90,10 @@ export const CalmingToolsGrid: React.FC<CalmingToolsGridProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-xs sm:text-sm font-bold text-[#351e1c] group-hover:text-[#200f0e] transition-colors truncate">
-                Butterfly Taps
+                {t('toolButterflyTitle', 'Butterfly Taps')}
               </h3>
               <p className="text-[11px] sm:text-xs text-[#7c5b57] truncate">
-                Reduce stress
+                {t('toolButterflyDesc', 'Reduce stress')}
               </p>
             </div>
           </div>
@@ -108,10 +111,10 @@ export const CalmingToolsGrid: React.FC<CalmingToolsGridProps> = ({
             </div>
             <div className="min-w-0">
               <h3 className="text-xs sm:text-sm font-bold text-[#282036] group-hover:text-[#181122] transition-colors truncate">
-                Vagal Hum
+                {t('toolVagalTitle', 'Vagal Hum')}
               </h3>
               <p className="text-[11px] sm:text-xs text-[#6a5e80] truncate">
-                Activate calm
+                {t('toolVagalDesc', 'Activate calm')}
               </p>
             </div>
           </div>

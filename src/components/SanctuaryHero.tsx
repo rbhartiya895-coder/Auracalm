@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MessageSquare, Radio, Wind, RotateCcw, Volume2, Sparkles, Check, Edit3, VolumeX } from 'lucide-react';
 import { ToneSetting } from '../types';
 import { AmbientSoundType, soundService } from '../services/soundService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SanctuaryHeroProps {
   currentTone: ToneSetting;
@@ -54,14 +55,15 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
   companionName = 'Meera',
   companionVoice = 'kavya'
 }) => {
+  const { t } = useLanguage();
   const [activeMode, setActiveMode] = useState<'sarvam' | 'chat'>('sarvam');
   const [showToneDropdown, setShowToneDropdown] = useState(false);
 
-  const tones: { name: ToneSetting; desc: string }[] = [
-    { name: 'Calm', desc: 'Quiet sanctuary baseline' },
-    { name: 'Compassionate', desc: 'Gentle warmth & soothing reassurance' },
-    { name: 'Grounded', desc: 'Firm, steady anchor for panic & spin' },
-    { name: 'Whisper', desc: 'Ultra-soft pacing for sleep & night' }
+  const tones: { name: ToneSetting; label: string; desc: string }[] = [
+    { name: 'Calm', label: t('toneCalm', 'Calm'), desc: t('calmDesc', 'Quiet sanctuary baseline') },
+    { name: 'Compassionate', label: t('toneCompassionate', 'Compassionate'), desc: t('compassionateDesc', 'Gentle warmth & soothing reassurance') },
+    { name: 'Grounded', label: t('toneGrounded', 'Grounded'), desc: t('groundedDesc', 'Firm, steady anchor for panic & spin') },
+    { name: 'Whisper', label: t('toneWhisper', 'Whisper'), desc: t('whisperDesc', 'Ultra-soft pacing for sleep & night') }
   ];
 
   const handlePillClick = (mode: 'sarvam' | 'chat') => {
@@ -121,10 +123,10 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
           </button>
         )}
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-[#1a2c25] font-sans">
-          How are you feeling today?
+          {t('heroGreeting', 'Welcome to your safe haven')}
         </h1>
         <p className="text-sm sm:text-base text-[#4a6358] font-normal leading-relaxed">
-          Speak with your personal guide <strong>{companionName}</strong>. Take your time. This is a safe and private space.
+          {t('heroSubtitle', 'Evidence-based acoustic resonance, bilateral stimulation, and neural somatic calming.')}
         </p>
       </div>
 
@@ -141,11 +143,11 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
             </div>
             <div className="min-w-0 flex-1">
               <div className="text-xs font-semibold text-[#1e342b] flex items-center justify-between">
-                <span>Tone: {currentTone}</span>
+                <span>{t('toneBaseline', 'Tone')}: {tones.find(tItem => tItem.name === currentTone)?.label || currentTone}</span>
                 <span className="text-[10px] text-[#738b80]">▾</span>
               </div>
               <p className="text-[11px] text-[#557165] truncate">
-                {tones.find((t) => t.name === currentTone)?.desc}
+                {tones.find((tItem) => tItem.name === currentTone)?.desc}
               </p>
             </div>
           </button>
@@ -153,24 +155,24 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
           {showToneDropdown && (
             <div className="absolute left-0 mt-2 w-64 bg-white border border-[#d6e2db] rounded-2xl shadow-xl p-1.5 z-50 animate-in fade-in duration-150">
               <div className="text-[11px] font-semibold text-[#668275] px-3 py-1 uppercase tracking-wider">
-                Sanctuary Audio Tone
+                {t('toneBaseline', 'Sanctuary Audio Tone')}
               </div>
-              {tones.map((t) => (
+              {tones.map((tItem) => (
                 <button
-                  key={t.name}
+                  key={tItem.name}
                   onClick={() => {
-                    onSelectTone(t.name);
+                    onSelectTone(tItem.name);
                     setShowToneDropdown(false);
                   }}
                   className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors flex items-center justify-between cursor-pointer ${
-                    currentTone === t.name ? 'bg-[#ebf4ef] text-[#18392d] font-semibold' : 'hover:bg-[#f6f9f7] text-[#334c41]'
+                    currentTone === tItem.name ? 'bg-[#ebf4ef] text-[#18392d] font-semibold' : 'hover:bg-[#f6f9f7] text-[#334c41]'
                   }`}
                 >
                   <div>
-                    <span className="block font-medium">{t.name}</span>
-                    <span className="text-[11px] text-[#5c776b]">{t.desc}</span>
+                    <span className="block font-medium">{tItem.label}</span>
+                    <span className="text-[11px] text-[#5c776b]">{tItem.desc}</span>
                   </div>
-                  {currentTone === t.name && <Check className="w-3.5 h-3.5 text-[#2f5e4e] shrink-0" />}
+                  {currentTone === tItem.name && <Check className="w-3.5 h-3.5 text-[#2f5e4e] shrink-0" />}
                 </button>
               ))}
             </div>
@@ -187,9 +189,9 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
           </div>
           <div className="min-w-0 flex-1">
             <div className="text-xs font-semibold text-[#1e342b] flex items-center gap-1.5">
-              <span>Breathing Guide</span>
+              <span>{t('pacerActive', 'Breathing Guide')}</span>
               <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${breathingGuideActive ? 'bg-[#dbeef4] text-[#1c4c59]' : 'bg-[#eef2f0] text-[#698276]'}`}>
-                {breathingGuideActive ? 'Active' : 'Muted'}
+                {breathingGuideActive ? t('activeBadge', 'Active') : 'Muted'}
               </span>
             </div>
             <p className="text-[11px] text-[#557165] truncate">
@@ -207,7 +209,7 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
             <RotateCcw className="w-4 h-4 text-[#755938]" />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-xs font-semibold text-[#1e342b]">Sigh Reset</div>
+            <div className="text-xs font-semibold text-[#1e342b]">{t('quickSighReset', 'Sigh Reset')}</div>
             <p className="text-[11px] text-[#755938] font-medium">Tap when needed</p>
           </div>
         </button>
@@ -245,10 +247,10 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
               )}
             </div>
             <span className="font-bold text-sm sm:text-base tracking-wide leading-tight">
-              {activeMode === 'sarvam' ? `Talk with ${companionName}` : 'Text Sanctuary'}
+              {activeMode === 'sarvam' ? `${t('speakWithCompanion', 'Talk with')} ${companionName}` : t('textChat', 'Text Sanctuary')}
             </span>
             <span className="text-[11px] text-[#c0dad0] font-light mt-1">
-              Sarvam AI Guide • Tap to start
+              {t('liveVagalStatus', 'Sarvam AI Guide • Tap to start')}
             </span>
           </button>
         </div>
@@ -273,7 +275,7 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
             }`}
           >
             <span>🌸</span>
-            <span>Talk with {companionName}</span>
+            <span>{t('speakWithCompanion', 'Talk with')} {companionName}</span>
             <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold ${
               activeMode === 'sarvam' ? 'bg-[#3b6656] text-white' : 'bg-[#d2e7dd] text-[#1c4538]'
             }`}>
@@ -290,7 +292,7 @@ export const SanctuaryHero: React.FC<SanctuaryHeroProps> = ({
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Text Chat</span>
+            <span>{t('textChat', 'Text Chat')}</span>
           </button>
         </div>
 

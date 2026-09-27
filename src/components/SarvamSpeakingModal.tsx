@@ -21,6 +21,7 @@ import { SarvamAvatar } from './SarvamAvatar';
 import { soundService } from '../services/soundService';
 import { storageService } from '../services/storageService';
 import { NamingCompanionModal } from './NamingCompanionModal';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SarvamSpeakingModalProps {
   isOpen: boolean;
@@ -46,6 +47,7 @@ export const SarvamSpeakingModal: React.FC<SarvamSpeakingModalProps> = ({
   companionName: propCompanionName,
   onCompanionNameChange
 }) => {
+  const { language } = useLanguage();
   const [companionName, setCompanionName] = useState<string>(
     () => propCompanionName || storageService.getCompanionName() || 'Meera'
   );
@@ -55,7 +57,13 @@ export const SarvamSpeakingModal: React.FC<SarvamSpeakingModalProps> = ({
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [userInput, setUserInput] = useState<string>('');
-  const [lang, setLang] = useState<'en' | 'hi'>('en');
+  const [lang, setLang] = useState<'en' | 'hi'>(() => (language === 'hi' ? 'hi' : 'en'));
+
+  useEffect(() => {
+    if (language === 'hi') {
+      setLang('hi');
+    }
+  }, [language]);
   const [isGuidingBreath, setIsGuidingBreath] = useState<boolean>(false);
   const [breathPhase, setBreathPhase] = useState<'Inhale' | 'Hold' | 'Exhale'>('Inhale');
   const [isApiConfigured, setIsApiConfigured] = useState<boolean>(false);

@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { Globe } from 'lucide-react';
 import { Header } from './components/Header';
 import { SanctuaryHero } from './components/SanctuaryHero';
 import { BreathingExerciseBar } from './components/BreathingExerciseBar';
@@ -29,15 +30,18 @@ import { NamingCompanionModal } from './components/NamingCompanionModal';
 import { IntroGuideModal } from './components/IntroGuideModal';
 import { AmbientSoundPanel } from './components/AmbientSoundPanel';
 import { CountrySelectorModal } from './components/CountrySelectorModal';
+import { InstallAppModal } from './components/InstallAppModal';
+import { LanguageSelectorModal } from './components/LanguageSelectorModal';
 
 import { TabView, Language, AppTheme, ToneSetting, UserProgress } from './types';
 import { storageService } from './services/storageService';
 import { soundService, AmbientSoundType } from './services/soundService';
 import { getCountryCrisisData } from './data/crisisHotlines';
+import { LanguageProvider, useLanguage } from './i18n/LanguageContext';
 
-export default function App() {
+function SanctuaryApp() {
+  const { language, setLanguage, t, currentLanguage, isLanguageModalOpen, setIsLanguageModalOpen, openLanguageSelector } = useLanguage();
   const [currentTab, setCurrentTab] = useState<TabView>('sanctuary');
-  const [language, setLanguage] = useState<Language>('en');
   const [theme, setTheme] = useState<AppTheme>('light');
   const [bgTheme, setBgTheme] = useState<BackgroundTheme>(() => storageService.getBackgroundTheme() as BackgroundTheme);
   const [currentTone, setCurrentTone] = useState<ToneSetting>('Calm');
@@ -61,6 +65,9 @@ export default function App() {
 
   // Ambient sound selector panel
   const [isAmbientPanelOpen, setIsAmbientPanelOpen] = useState<boolean>(false);
+
+  // Install app modal state
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState<boolean>(false);
 
   // User progress data
   const [userProgress, setUserProgress] = useState<UserProgress>(() => storageService.getProgress());
@@ -172,6 +179,7 @@ export default function App() {
         streakDays={userProgress.currentStreakDays}
         companionName={companionName}
         companionVoice={companionVoice}
+        onOpenInstall={() => setIsInstallModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -270,6 +278,24 @@ export default function App() {
             </button>
             <span>•</span>
             <button
+              onClick={() => setIsInstallModalOpen(true)}
+              className="text-emerald-700 hover:text-emerald-900 font-bold hover:underline flex items-center gap-1 cursor-pointer"
+              title="Download or install AuraCalm on your device"
+            >
+              <span>Install / Download App 📲</span>
+            </button>
+            <span>•</span>
+            <button
+              onClick={openLanguageSelector}
+              className="text-[#1f4739] hover:text-[#0c261d] font-semibold hover:underline flex items-center gap-1.5 cursor-pointer bg-[#eef5f1] px-2.5 py-0.5 rounded-full border border-[#cadcd1] transition-all hover:scale-102"
+              title={`Language: ${currentLanguage.name}. Click to change.`}
+            >
+              <Globe className="w-3.5 h-3.5 text-[#2c5b4b]" />
+              <span>{currentLanguage.flag}</span>
+              <span>{currentLanguage.nativeName}</span>
+            </button>
+            <span>•</span>
+            <button
               onClick={() => setIsCountryModalOpen(true)}
               className="text-slate-600 hover:text-slate-900 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
               title="Change your country"
@@ -283,7 +309,7 @@ export default function App() {
               className="text-rose-600 font-semibold hover:underline flex items-center gap-1 cursor-pointer"
               title={`Emergency Helpline for ${countryCrisis.name}: ${countryCrisis.primaryCrisisName} (${countryCrisis.primaryCrisisNumber})`}
             >
-              <span>Emergency Helpline ({countryCrisis.primaryCrisisNumber})</span>
+              <span>{t('emergencyNumber', 'Emergency Helpline')} ({countryCrisis.primaryCrisisNumber})</span>
             </button>
           </div>
         </div>
@@ -323,6 +349,12 @@ export default function App() {
         onCyclesAdded={handleCyclesCompleted}
       />
 
+      {/* Language Selector Modal */}
+      <LanguageSelectorModal
+        isOpen={isLanguageModalOpen}
+        onClose={() => setIsLanguageModalOpen(false)}
+      />
+
       {/* Country Selector Modal (Enter/Select Country First) */}
       <CountrySelectorModal
         isOpen={isCountryModalOpen}
@@ -358,6 +390,7 @@ export default function App() {
         onOpenNamingModal={() => setIsNamingModalOpen(true)}
         userCountry={userCountry}
         onOpenCrisis={() => setIsCountryModalOpen(true)}
+        onOpenInstall={() => setIsInstallModalOpen(true)}
       />
 
       <SarvamSpeakingModal
@@ -394,6 +427,20 @@ export default function App() {
         currentSound={ambientSound}
         onSelectSound={handleSelectAmbientSound}
       />
+
+      <InstallAppModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+        companionName={companionName}
+      />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <SanctuaryApp />
+    </LanguageProvider>
   );
 }

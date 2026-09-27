@@ -3,6 +3,7 @@ import { Leaf, Play, Pause, ChevronRight, Sparkles, Volume2, VolumeX, Maximize2 
 import { BreathingPreset } from '../types';
 import { BREATHING_PRESETS } from '../data/sessionsData';
 import { soundService } from '../services/soundService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface BreathingExerciseBarProps {
   onOpenBreathingModal: () => void;
@@ -13,6 +14,7 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
   onOpenBreathingModal,
   onCycleComplete
 }) => {
+  const { t } = useLanguage();
   const [selectedPreset, setSelectedPreset] = useState<BreathingPreset>(BREATHING_PRESETS[0]);
   const [isRunning, setIsRunning] = useState(false);
   const [phase, setPhase] = useState<'Inhale' | 'Hold' | 'Exhale' | 'HoldPost'>('Inhale');
@@ -96,17 +98,17 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-base sm:text-lg font-bold text-[#1a2d25] font-sans">
-                  Breathing Exercise
+                  {t('pacerTitle', 'Breathing Exercise')}
                 </h3>
                 {isRunning && (
                   <span className="flex items-center gap-1 text-[11px] font-semibold text-[#2b5646] bg-[#eef5f1] px-2 py-0.5 rounded-full border border-[#cadcd1]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[#3d7a64] animate-ping"></span>
-                    {phase} {phaseTimeLeft}s
+                    {phase === 'Inhale' ? t('breatheIn', 'Inhale') : phase === 'Exhale' ? t('breatheOut', 'Exhale') : t('holdBreath', 'Hold')} {phaseTimeLeft}s
                   </span>
                 )}
               </div>
               <p className="text-xs sm:text-sm text-[#546e62]">
-                Follow the pace to feel calmer.
+                {t('pacerActive', 'Follow the pace to feel calmer.')}
               </p>
             </div>
           </div>
@@ -125,7 +127,7 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
                 <span className="text-sm font-bold font-mono">
                   {selectedPreset.inhale}s
                 </span>
-                <span className="text-[11px] text-[#4d7062] font-medium">Inhale</span>
+                <span className="text-[11px] text-[#4d7062] font-medium">{t('breatheIn', 'Inhale')}</span>
               </div>
 
               {/* Arrow */}
@@ -142,7 +144,7 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
                 <span className="text-sm font-bold font-mono">
                   {selectedPreset.hold1}s
                 </span>
-                <span className="text-[11px] text-[#786646] font-medium">Hold</span>
+                <span className="text-[11px] text-[#786646] font-medium">{t('holdBreath', 'Hold')}</span>
               </div>
 
               {/* Arrow */}
@@ -159,7 +161,7 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
                 <span className="text-sm font-bold font-mono">
                   {selectedPreset.exhale}s
                 </span>
-                <span className="text-[11px] text-[#625b80] font-medium">Exhale</span>
+                <span className="text-[11px] text-[#625b80] font-medium">{t('breatheOut', 'Exhale')}</span>
               </div>
             </div>
 
@@ -176,12 +178,12 @@ export const BreathingExerciseBar: React.FC<BreathingExerciseBarProps> = ({
                 {isRunning ? (
                   <>
                     <Pause className="w-3.5 h-3.5 fill-current" />
-                    <span>Pause</span>
+                    <span>{t('pauseSession', 'Pause')}</span>
                   </>
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>Start Pacer</span>
+                    <span>{t('startSession', 'Start Pacer')}</span>
                   </>
                 )}
               </button>

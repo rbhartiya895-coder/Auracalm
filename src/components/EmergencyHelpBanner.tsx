@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { AlertTriangle, PhoneCall, Globe, ShieldCheck } from 'lucide-react';
 import { getCountryCrisisData } from '../data/crisisHotlines';
 import { storageService } from '../services/storageService';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface EmergencyHelpBannerProps {
   onTriggerEmergency: () => void;
@@ -14,6 +15,7 @@ export const EmergencyHelpBanner: React.FC<EmergencyHelpBannerProps> = ({
   onOpenCountrySelect,
   userCountry = 'in'
 }) => {
+  const { t } = useLanguage();
   const [holdProgress, setHoldProgress] = useState(0);
   const [isHolding, setIsHolding] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -63,7 +65,7 @@ export const EmergencyHelpBanner: React.FC<EmergencyHelpBannerProps> = ({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-base sm:text-lg font-bold text-[#632925] font-sans">
-                Need immediate crisis help?
+                {t('immediateHelpQuestion', 'Need immediate crisis help?')}
               </h3>
               {/* Country Badge with Change Action */}
               <button
@@ -75,12 +77,12 @@ export const EmergencyHelpBanner: React.FC<EmergencyHelpBannerProps> = ({
                 <span>{countryData.flag}</span>
                 <span>{countryData.name}</span>
                 <span className="text-[10px] text-[#9c524c] font-normal underline">
-                  {hasChosenCountry ? 'Change' : 'Set Country'}
+                  {hasChosenCountry ? t('changeCountry', 'Change') : t('setCountry', 'Set Country')}
                 </span>
               </button>
             </div>
             <p className="text-xs sm:text-sm text-[#8a524e] font-normal mt-0.5">
-              Hold the button for 3 seconds to access <strong className="font-semibold text-[#662824]">{countryData.primaryCrisisName} ({countryData.primaryCrisisNumber})</strong> & 24/7 verified lifelines.
+              {t('immediateHelpDesc', 'Hold the button for 3 seconds to access 24/7 verified emergency lifelines.')} (<strong className="font-semibold text-[#662824]">{countryData.primaryCrisisName} - {countryData.primaryCrisisNumber}</strong>)
             </p>
           </div>
         </div>
@@ -94,7 +96,7 @@ export const EmergencyHelpBanner: React.FC<EmergencyHelpBannerProps> = ({
               title="Change your country for emergency services"
             >
               <Globe className="w-3.5 h-3.5 text-[#914641]" />
-              <span className="hidden sm:inline">Country:</span>
+              <span className="hidden sm:inline">{t('changeCountry', 'Country')}:</span>
               <span>{countryData.flag}</span>
             </button>
           )}
@@ -119,7 +121,7 @@ export const EmergencyHelpBanner: React.FC<EmergencyHelpBannerProps> = ({
               <span className="relative z-10">
                 {isHolding
                   ? `Holding... ${Math.round((holdProgress / 100) * 3)}s / 3s`
-                  : `Hold 3s for ${countryData.primaryCrisisNumber}`}
+                  : `${t('holdToCall', 'Hold 3s to Call')} (${countryData.primaryCrisisNumber})`}
               </span>
             </button>
           </div>

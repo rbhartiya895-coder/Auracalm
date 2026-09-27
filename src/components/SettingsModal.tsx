@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { X, Volume2, Settings, ShieldCheck, Trash2, Check, UserCheck, Edit3 } from 'lucide-react';
+import { X, Volume2, Settings, ShieldCheck, Trash2, Check, UserCheck, Edit3, Download, Globe } from 'lucide-react';
 import { ToneSetting } from '../types';
 import { soundService } from '../services/soundService';
 import { storageService } from '../services/storageService';
 import { getCountryCrisisData } from '../data/crisisHotlines';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface SettingsModalProps {
   onOpenNamingModal?: () => void;
   userCountry?: string;
   onOpenCrisis?: () => void;
+  onOpenInstall?: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({
@@ -26,8 +28,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   companionName = 'Meera',
   onOpenNamingModal,
   userCountry = 'in',
-  onOpenCrisis
+  onOpenCrisis,
+  onOpenInstall
 }) => {
+  const { t, currentLanguage, openLanguageSelector } = useLanguage();
   const [volume, setVolume] = useState(() => storageService.getAmbientVolume());
   const companionVoice = storageService.getCompanionVoice() || 'kavya';
   const countryCrisis = getCountryCrisisData(userCountry);
@@ -58,8 +62,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               <Settings className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">Sanctuary Settings</h2>
-              <p className="text-xs text-slate-500">Audio synthesis & companion preferences</p>
+              <h2 className="text-base font-bold text-slate-900">{t('sanctuarySettings', 'Sanctuary Settings')}</h2>
+              <p className="text-xs text-slate-500">{t('settingsSubtitle', 'Audio synthesis & companion preferences')}</p>
             </div>
           </div>
           <button
@@ -71,7 +75,35 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-5 text-xs text-slate-700 overflow-y-auto max-h-[75vh]">
+        <div className="p-6 space-y-4 text-xs text-slate-700 overflow-y-auto max-h-[75vh]">
+          {/* App Language Selector Card */}
+          <div className="p-3.5 bg-gradient-to-r from-emerald-50/90 via-teal-50/70 to-emerald-50/90 border border-emerald-300/80 rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-emerald-100 border border-emerald-300 flex items-center justify-center text-lg shrink-0">
+                {currentLanguage.flag}
+              </div>
+              <div className="min-w-0">
+                <span className="font-bold text-emerald-950 block truncate text-xs">
+                  {t('language', 'Language')}: {currentLanguage.nativeName}
+                </span>
+                <span className="text-[11px] text-emerald-700 truncate block">
+                  {currentLanguage.name} • {currentLanguage.region}
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                openLanguageSelector();
+              }}
+              className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-[11px] font-semibold transition-colors cursor-pointer shrink-0 flex items-center gap-1.5 shadow-2xs"
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>{t('changeBtn', 'Change')}</span>
+            </button>
+          </div>
+
           {/* Companion & Voice Model Customization */}
           <div className="p-3.5 bg-emerald-50/60 border border-emerald-200 rounded-2xl flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
@@ -80,10 +112,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div>
                 <span className="font-bold text-emerald-950 block">
-                  Companion: {companionName}
+                  {t('companionProfile', 'Companion Profile')}: {companionName}
                 </span>
                 <span className="text-[11px] text-emerald-700">
-                  Voice Model: <strong className="capitalize">{companionVoice}</strong> (Sarvam AI)
+                  {t('voiceModel', 'Voice Model')}: <strong className="capitalize">{companionVoice}</strong> (Sarvam AI)
                 </span>
               </div>
             </div>
@@ -95,7 +127,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 className="px-2.5 py-1.5 bg-white hover:bg-emerald-100 text-emerald-900 border border-emerald-300 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer"
                 title="Hear sample speech"
               >
-                Test Voice
+                {t('testVoice', 'Test Voice')}
               </button>
               {onOpenNamingModal && (
                 <button
@@ -107,7 +139,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   className="px-2.5 py-1.5 bg-[#0d6954] hover:bg-[#09473a] text-white rounded-lg text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1"
                 >
                   <Edit3 className="w-3 h-3" />
-                  <span>Change</span>
+                  <span>{t('changeBtn', 'Change')}</span>
                 </button>
               )}
             </div>
@@ -116,7 +148,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           {/* Audio Master Volume */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="font-bold text-slate-900">Background Soundscape Volume</span>
+              <span className="font-bold text-slate-900">{t('soundscapeVolume', 'Background Soundscape Volume')}</span>
               <span className="font-mono text-slate-500">{Math.round(volume * 100)}%</span>
             </div>
             <input
@@ -135,34 +167,63 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
           {/* Test Chime */}
           <div className="flex items-center justify-between pt-1">
-            <span>Tibetan Singing Bowl Bell Test</span>
+            <span>{t('chimeTest', 'Tibetan Singing Bowl Bell Test')}</span>
             <button
               onClick={handleTestChime}
               className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-lg border border-emerald-200 transition-colors cursor-pointer"
             >
-              Ring Chime 🔔
+              {t('ringChimeBtn', 'Ring Chime 🔔')}
             </button>
           </div>
 
           {/* Tone Baseline */}
           <div>
-            <span className="font-bold text-slate-900 block mb-2">Sanctuary Tone Baseline</span>
+            <span className="font-bold text-slate-900 block mb-2">{t('toneBaseline', 'Sanctuary Tone Baseline')}</span>
             <div className="grid grid-cols-2 gap-2">
-              {(['Calm', 'Compassionate', 'Grounded', 'Whisper'] as ToneSetting[]).map((t) => (
+              {(['Calm', 'Compassionate', 'Grounded', 'Whisper'] as ToneSetting[]).map((tVal) => (
                 <button
-                  key={t}
-                  onClick={() => onToneChange(t)}
+                  key={tVal}
+                  onClick={() => onToneChange(tVal)}
                   className={`p-2 rounded-xl text-left border transition-all cursor-pointer ${
-                    tone === t
+                    tone === tVal
                       ? 'bg-emerald-50 border-emerald-500 text-emerald-950 font-bold'
                       : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
                   }`}
                 >
-                  {t}
+                  {tVal}
                 </button>
               ))}
             </div>
           </div>
+
+          {/* Download & Install App Option */}
+          {onOpenInstall && (
+            <div className="p-3.5 bg-gradient-to-r from-emerald-50 via-teal-50/70 to-emerald-50 border border-emerald-200 rounded-2xl flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center shrink-0">
+                  <Download className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="font-bold text-emerald-950 block truncate text-xs">
+                    {t('installApp', 'Install App')}
+                  </span>
+                  <span className="text-[11px] text-emerald-800 truncate block">
+                    Install on Phone, Tablet, or Desktop
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenInstall();
+                }}
+                className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer shrink-0 shadow-2xs"
+              >
+                {t('installApp', 'Install')}
+              </button>
+            </div>
+          )}
 
           {/* Emergency Helpline Region / Country */}
           <div className="p-3.5 bg-rose-50/70 border border-rose-200 rounded-2xl flex items-center justify-between gap-3">
@@ -172,7 +233,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
               <div className="min-w-0">
                 <span className="font-bold text-rose-950 block truncate">
-                  Helpline Country: {countryCrisis.name}
+                  {t('helplineCountry', 'Helpline Country')}: {countryCrisis.name}
                 </span>
                 <span className="text-[11px] text-rose-800 truncate block">
                   {countryCrisis.primaryCrisisName} ({countryCrisis.primaryCrisisNumber})
@@ -187,7 +248,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               }}
               className="px-2.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white rounded-lg text-[11px] font-semibold transition-colors cursor-pointer shrink-0"
             >
-              Change
+              {t('changeBtn', 'Change')}
             </button>
           </div>
 
@@ -195,8 +256,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-3.5 flex items-start gap-2.5">
             <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
             <div className="text-[11px] text-emerald-950 leading-relaxed">
-              <strong className="block font-semibold">100% Client-Side Privacy:</strong>
-              All audio waveforms, breathing timers, voice synthesis, and mood entries are generated and stored exclusively in your browser. No personal data is sent to external tracking servers.
+              <strong className="block font-semibold">{t('privacyTitle', '100% Client-Side Privacy')}:</strong>
+              {t('privacyDescription', 'All audio waveforms, breathing timers, voice synthesis, and mood entries are generated and stored exclusively in your browser. No personal data is sent to external tracking servers.')}
             </div>
           </div>
 
@@ -212,7 +273,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               className="w-full flex items-center justify-center gap-2 py-2 text-rose-600 hover:bg-rose-50 rounded-xl transition-colors font-medium text-xs cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span>Reset Local Sanctuary Data</span>
+              <span>{t('resetDataBtn', 'Reset Local Sanctuary Data')}</span>
             </button>
           </div>
         </div>
@@ -223,7 +284,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             onClick={onClose}
             className="px-5 py-2 text-xs font-bold text-white bg-[#0d6954] hover:bg-[#09473a] rounded-xl shadow-xs cursor-pointer"
           >
-            Done
+            {t('doneBtn', 'Done')}
           </button>
         </div>
       </div>
